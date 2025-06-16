@@ -4,6 +4,7 @@ from agno.playground import Playground
 from agno.storage.sqlite import SqliteStorage
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.yfinance import YFinanceTools
+from fastapi.middleware.cors import CORSMiddleware
 
 agent_storage: str = "tmp/agents.db"
 
@@ -41,5 +42,10 @@ finance_agent = Agent(
 playground_app = Playground(agents=[web_agent, finance_agent])
 app = playground_app.get_app()
 
-if __name__ == "__main__":
-    playground_app.serve("playground:app", reload=True)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://frontend-152767013906.europe-west1.run.app"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
